@@ -6,6 +6,12 @@ Status: repository created; planning complete; implementation phases pending. Ba
 
 A credible B2B supply chain workspace: charcoal sidebar, warm ivory workspace, navy/near-black type, restrained orange (`#E98A45`) for emphasis, muted green for success and clear semantic warning/error colors. Wide readable tables, purposeful whitespace, compact filters, crisp cards, clean typography and subtle 120–220 ms hover/panel transitions. No motion that delays work; respect reduced-motion. Light/dark toggle persists preference. Responsive sidebar becomes a drawer on small screens; tables retain usable search/filter and details.
 
+### Typography, layout and motion reference
+
+Carry over the professional editorial feel approved for the portfolio: expressive, confident display typography for page titles and feature headlines; a restrained, highly legible sans serif for controls, tables, forms and dense operational data. Use a consistent type scale, strong weight and spacing contrast, and short descriptive headings. Do not use oversized decorative lettering inside data tables or transactional forms. Establish the actual font family and licensed source during Phase 1; prefer performant, self-hosted variable fonts with sensible system fallbacks.
+
+Borrow the portfolio's layout discipline and motion language: intentional asymmetric composition on welcome/demo sections, generous whitespace around major headings, precise grid alignment in the dashboard, subtle section reveals and responsive hover feedback. Keep data-heavy screens predictable and scannable. Use transforms/opacity for animation, avoid layout shifts and heavy scroll effects, and turn nonessential animation off for reduced-motion users. Preserve ManiLogix's approved charcoal/ivory/orange palette in both light and dark themes; do not copy portfolio content, branding, imagery or project cards.
+
 Framework: React + TypeScript + Vite, React Router, a lightweight server-data query layer, CSS variables/design tokens, accessible component primitives. Do not use Angular. One API adapter uses `VITE_API_BASE_URL` to call the existing Spring Modulith `/api/*` routes; no new backend or mock-only production screens. Never expose database credentials or server secrets in the browser.
 
 ## Real user journeys
