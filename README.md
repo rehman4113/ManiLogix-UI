@@ -1,6 +1,6 @@
 # ManiLogix UI — implementation and flow plan
 
-Status: repository created; planning complete; implementation phases pending. Backend source of truth: [ManiLogix modulith](https://github.com/rehman4113/Mani-Logix-B2B/tree/main/Coding/manilogix-modulith) (reviewed at commit `468731405e523d5b3e1197f89039e8f0e1665b5c`). Implement on a `dev` branch; keep `main` for later approval and production.
+Status: six-phase implementation drafted on `dev`; production build and focused tests pass. Live API and browser verification remain pending. Backend source of truth: [ManiLogix modulith](https://github.com/rehman4113/Mani-Logix-B2B/tree/main/Coding/manilogix-modulith) (reviewed at commit `468731405e523d5b3e1197f89039e8f0e1665b5c`). Implement on a `dev` branch; keep `main` for later approval and production.
 
 ## Product and visual direction
 
@@ -51,11 +51,11 @@ Contract caveats: There is no dedicated dashboard/analytics, search/filter, pagi
 
 - [x] Separate UI repository created: `rehman4113/ManiLogix-UI`.
 - [x] API and UI flow plan drafted against current Modulith controllers.
-- [ ] **1. Foundation:** initialize React/TypeScript/Vite on `dev`, route shell, tokens, typography, theme, reusable inputs/table/cards/drawer, typed API models. Check desktop and mobile shell, keyboard focus and build.
-- [ ] **2. Core operations:** dashboard derived from permitted data, inventory/catalog/list/detail/editor, supplier directory/detail/onboarding and orders list/detail. Check role visibility and loading/empty/error states with API fixtures.
-- [ ] **3. Transactions and admin:** cart/review/order placement, allowed status and cancellation actions, admin user provisioning, supplier profile edits, inventory deactivation, notifications. Verify each form/transition against existing API request/response and 403/409 behavior. Financial information is limited to existing order line prices and totals; invoices/payments remain documented future work.
-- [ ] **4. Identity and demo:** login/signup, token handling, route guards, logout, read-only demo fixtures, persistent theme. Check demo cannot mutate, supplier cannot access other suppliers' data, and session expiry has clear recovery.
-- [ ] **5. Experience polish:** responsive layouts, accessible controls/labels/focus, search and filters with explicit scope, skeletons, empty/error/permission states, reduced motion and cross-theme contrast.
+- [x] **1. Foundation:** initialize React/TypeScript/Vite on `dev`, route shell, tokens, typography, theme, reusable inputs/table/cards/drawer, typed API models. Check desktop and mobile shell, keyboard focus and build.
+- [x] **2. Core operations:** dashboard derived from permitted data, inventory/catalog/list/detail/editor, supplier directory/detail/onboarding and orders list/detail. Check role visibility and loading/empty/error states with API fixtures.
+- [x] **3. Transactions and admin:** cart/review/order placement, allowed status and cancellation actions, admin user provisioning, supplier profile edits, inventory deactivation, notifications. Verify each form/transition against existing API request/response and 403/409 behavior. Financial information is limited to existing order line prices and totals; invoices/payments remain documented future work.
+- [x] **4. Identity and demo:** login/signup, token handling, route guards, logout, read-only demo fixtures, persistent theme. Check demo cannot mutate, supplier cannot access other suppliers' data, and session expiry has clear recovery.
+- [x] **5. Experience polish:** responsive layouts, accessible controls/labels/focus, search and filters with explicit scope, skeletons, empty/error/permission states, reduced motion and cross-theme contrast.
 - [ ] **6. Verification:** build/typecheck, targeted component and API-contract tests, complete role-based journeys and browser/mobile review. Record real backend connectivity evidence separately from mocked checks; fix discovered issues; report each phase complete only when verified.
 
 Finish one phase before starting the next. If backend is unavailable, finish UI with contract fixtures but explicitly leave live integration unverified. Work stays on the development branch; no production deployment or main merge without the user's decision.
@@ -63,3 +63,23 @@ Finish one phase before starting the next. If backend is unavailable, finish UI 
 ## Deferred backend-dependent work
 
 Invoices, payments, returns, purchasing approvals, partial shipment/fulfillment, stock movement history, notification read tracking, richer dashboard analytics, order pagination and server-side search need backend contracts first. Track separately as future enhancements; do not disguise demo data as live data.
+
+## Implementation verification and release gates
+
+- `npm test`: six focused checks pass for demo isolation, theme preference, request shapes, JWT roles and customer navigation. `npm run build`: TypeScript and Vite production build pass.
+- Live API connectivity is **not verified**. The backend has no explicit CORS configuration; deploy the UI behind a same-origin `/api` reverse proxy, or configure an explicitly allowed UI origin in backend CORS before using browser-to-backend requests. Local Vite proxies `/api` to `MANILOGIX_API_PROXY`; the production build does not include a server proxy.
+- This execution environment's local Vite server failed with `uv_interface_addresses` while opening the port. Browser/mobile visual review and live role-based end-to-end verification remain required; Phase 6 is deliberately unchecked.
+- The supplier API has no `my profile` lookup. A supplier must enter their assigned supplier ID to fetch the authorized profile. The backend enforces ownership.
+- Dashboard counts use visible orders and current inventory page; they are not system-wide analytics. No financial/invoice/payment UI was invented.
+
+## Local development
+
+```bash
+npm ci
+cp .env.example .env.local
+npm run dev
+npm test
+npm run build
+```
+
+Configure `MANILOGIX_API_PROXY` for the local Spring backend. For production, route `/api/*` to the working backend using the host's reverse proxy and verify cookies/headers and CORS. Do not publish the UI as a live integrated application until the backend health and database connection pass.
